@@ -1,0 +1,1 @@
+zig build-exe $1/main.zig -femit-bin=zig-out/bin/$1
