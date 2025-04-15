@@ -1,4 +1,5 @@
 const std = @import("std");
+const libaoc = @import("aoc");
 
 pub fn main() !void {
     //try part1();
@@ -127,5 +128,7 @@ pub fn part2() !void {
             continue;
         }
     }
+
+    try libaoc.readFileToArray(filename);
     std.debug.print("Score: {any}\n", .{score});
 }
