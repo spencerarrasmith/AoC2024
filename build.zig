@@ -31,6 +31,17 @@ pub fn build(b: *std.Build) void {
     day1.linkLibrary(libaoc);
     b.installArtifact(day1);
 
+    // Build day2
+    const day2 = b.addExecutable(.{
+        .name = "day2",
+        .root_source_file = b.path("day2/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    day1.root_module.addImport("aoc", aoc_module);
+    day1.linkLibrary(libaoc);
+    b.installArtifact(day2);
+
     // Run commands for each executable
     const run_cmd1 = b.addRunArtifact(day1);
     const run_step1 = b.step("day1", "Run day 1");
