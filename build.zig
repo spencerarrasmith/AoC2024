@@ -38,8 +38,8 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    day1.root_module.addImport("aoc", aoc_module);
-    day1.linkLibrary(libaoc);
+    day2.root_module.addImport("aoc", aoc_module);
+    day2.linkLibrary(libaoc);
     b.installArtifact(day2);
 
     // Run commands for each executable
