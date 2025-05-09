@@ -117,6 +117,62 @@ pub fn part1() !void {
 }
 
 pub fn part2() !void {
-    std.debug.print("Part 2!\n", .{});
-    return;
+    const filename = "./day4/input.txt";
+
+    const allocator = std.heap.page_allocator;
+
+    const txt = try std.fs.cwd().readFileAlloc(allocator, filename, std.math.maxInt(usize));
+    defer allocator.free(txt);
+
+    // Create arraylist for each orientation
+    var matrix = std.ArrayList(std.ArrayList(u8)).init(allocator);
+    defer matrix.deinit();
+
+    // Split the string and iterate through tokens
+    var iterator = std.mem.split(u8, txt, "\n");
+    while (iterator.next()) |row| {
+        var current_row = std.ArrayList(u8).init(allocator);
+        for (row) |char| {
+            try current_row.append(char);
+        }
+        try matrix.append(current_row);
+    }
+
+    var r: u32 = 0;
+    var c: u32 = 0;
+    const width: usize = matrix.items.len;
+    const height: usize = matrix.items[0].items.len;
+
+    var found: u32 = 0;
+
+    for (matrix.items) |row| {
+        for (row.items) |char| {
+            if (char == 'A') {
+                if ((c >= 1) and (c + 1 < width) and (r >= 1) and (r + 1 < height)) {
+                    if (((matrix.items[r - 1].items[c - 1] == 'M') and (matrix.items[r + 1].items[c + 1] == 'S')) or ((matrix.items[r + 1].items[c + 1] == 'M') and (matrix.items[r - 1].items[c - 1] == 'S'))) {
+                        if ((matrix.items[r - 1].items[c + 1] == 'M') and (matrix.items[r + 1].items[c - 1] == 'S')) {
+                            found += 1;
+                            std.debug.print("1 at {d} {d}\n", .{ r, c });
+                        } else if ((matrix.items[r + 1].items[c - 1] == 'M') and (matrix.items[r - 1].items[c + 1] == 'S')) {
+                            found += 1;
+                            std.debug.print("2 at {d} {d}\n", .{ r, c });
+                        }
+                    } else if (((matrix.items[r - 1].items[c + 1] == 'M') and (matrix.items[r + 1].items[c - 1] == 'S')) or ((matrix.items[r + 1].items[c - 1] == 'M') and (matrix.items[r - 1].items[c + 1] == 'S'))) {
+                        if ((matrix.items[r - 1].items[c - 1] == 'M') and (matrix.items[r + 1].items[c + 1] == 'S')) {
+                            found += 1;
+                            std.debug.print("3 at {d} {d}\n", .{ r, c });
+                        } else if ((matrix.items[r + 1].items[c + 1] == 'M') and (matrix.items[r - 1].items[c - 1] == 'S')) {
+                            found += 1;
+                            std.debug.print("4 at {d} {d}\n", .{ r, c });
+                        }
+                    }
+                }
+            }
+            c += 1;
+        }
+        r += 1;
+        c = 0;
+    }
+
+    std.debug.print("Found {any}\n", .{found});
 }
