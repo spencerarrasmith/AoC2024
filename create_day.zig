@@ -14,9 +14,13 @@ pub fn main() !void {
     // Parse the argument
     const day_num: u8 = try std.fmt.parseInt(u8, args[1], 10);
     var buf_dir: [64]u8 = undefined;
-    var buf_file: [64]u8 = undefined;
+    var buf_main: [64]u8 = undefined;
+    var buf_sample: [64]u8 = undefined;
+    var buf_input: [64]u8 = undefined;
     const dirname = try std.fmt.bufPrint(&buf_dir, "day{d}", .{day_num});
-    const filename = try std.fmt.bufPrint(&buf_file, "day{d}/main.zig", .{day_num});
+    const mainfile = try std.fmt.bufPrint(&buf_main, "day{d}/main.zig", .{day_num});
+    const samplefile = try std.fmt.bufPrint(&buf_sample, "day{d}/sample.txt", .{day_num});
+    const inputfile = try std.fmt.bufPrint(&buf_input, "day{d}/input.txt", .{day_num});
 
     const content =
         \\const std = @import("std");
@@ -47,10 +51,22 @@ pub fn main() !void {
     ;
 
     if (std.fs.cwd().makeDir(dirname)) |_| {
-        const file = try std.fs.cwd().createFile(filename, .{});
-        defer file.close();
+        const file1 = try std.fs.cwd().createFile(mainfile, .{});
+        defer file1.close();
         try std.fs.cwd().writeFile(.{
-            .sub_path = filename,
+            .sub_path = mainfile,
+            .data = content,
+        });
+        const file2 = try std.fs.cwd().createFile(samplefile, .{});
+        defer file2.close();
+        try std.fs.cwd().writeFile(.{
+            .sub_path = samplefile,
+            .data = content,
+        });
+        const file3 = try std.fs.cwd().createFile(inputfile, .{});
+        defer file3.close();
+        try std.fs.cwd().writeFile(.{
+            .sub_path = inputfile,
             .data = content,
         });
     } else |err| switch (err) {
