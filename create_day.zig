@@ -59,16 +59,9 @@ pub fn main() !void {
         });
         const file2 = try std.fs.cwd().createFile(samplefile, .{});
         defer file2.close();
-        try std.fs.cwd().writeFile(.{
-            .sub_path = samplefile,
-            .data = content,
-        });
+
         const file3 = try std.fs.cwd().createFile(inputfile, .{});
         defer file3.close();
-        try std.fs.cwd().writeFile(.{
-            .sub_path = inputfile,
-            .data = content,
-        });
     } else |err| switch (err) {
         error.PathAlreadyExists => {
             // Directory already exists, continue
